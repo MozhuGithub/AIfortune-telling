@@ -2,10 +2,8 @@ import { useState, useEffect } from 'react'
 import { getTodayFortune } from './lib/liuyao'
 import { getTarotReading } from './lib/tarot'
 
-// 命理详情页组件（带Tab切换）
+// 命理详情页组件
 function FortuneDetail({ fortuneResult, setCurrentPage }) {
-  const [activeTab, setActiveTab] = useState('liuyao')
-
   if (!fortuneResult) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[80vh] text-gray-400">
@@ -20,121 +18,97 @@ function FortuneDetail({ fortuneResult, setCurrentPage }) {
     )
   }
 
-  const tabs = [
-    { key: 'liuyao', label: '周易六爻', icon: '☯️' },
-    { key: 'tarot', label: '塔罗牌', icon: '🃏' }
-  ]
-
   return (
-    <div className="flex flex-col items-center min-h-[80vh] px-4 py-8 relative scanline">
+    <div className="flex flex-col items-center min-h-[80vh] px-4 py-8 pb-16 relative scanline">
       <h2 className="text-4xl font-bold mb-8 gradient-text-neon">
         命理详解
       </h2>
-      
-      {/* Tab 切换 */}
-      <div className="flex gap-2 mb-6">
-        {tabs.map(tab => (
-          <button
-            key={tab.key}
-            onClick={() => setActiveTab(tab.key)}
-            className={`px-6 py-2 rounded-full text-sm font-medium transition-all ${
-              activeTab === tab.key 
-                ? 'bg-gradient-to-r from-purple-600 to-cyan-500 text-white shadow-lg shadow-purple-500/30' 
-                : 'bg-gray-800/50 text-gray-400 hover:text-white border border-gray-700'
-            }`}
-          >
-            {tab.icon} {tab.label}
-          </button>
-        ))}
-      </div>
 
-      {/* 内容区域 */}
-      <div className="w-full max-w-2xl">
-        {activeTab === 'liuyao' && (
-          <div className="bg-gradient-to-br from-[#1a1a2e]/90 to-[#0a0a0f]/90 backdrop-blur-md rounded-2xl p-8 shadow-2xl border border-purple-500/20 relative">
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1/2 h-px bg-gradient-to-r from-transparent via-cyan-400 to-transparent"></div>
-            
-            <div className="text-center mb-8">
-              <h3 className="text-2xl font-bold gradient-text-fire mb-2">{fortuneResult.title}</h3>
-              <span className="inline-block px-4 py-1 bg-gradient-to-r from-purple-600/80 to-cyan-500/80 rounded-full text-white text-sm">
-                {fortuneResult.fortuneLevel}
-              </span>
+      <div className="w-full max-w-2xl space-y-6">
+        {/* 1. 周易六爻 */}
+        <div className="bg-gradient-to-br from-[#1a1a2e]/90 to-[#0a0a0f]/90 backdrop-blur-md rounded-2xl p-6 shadow-2xl border border-purple-500/20 relative">
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1/2 h-px bg-gradient-to-r from-transparent via-purple-400 to-transparent"></div>
+          
+          <h3 className="text-xl font-bold text-purple-400 mb-4 flex items-center gap-2">
+            <span>☯️</span> 周易六爻
+            <span className="text-sm font-normal text-gray-500 ml-2">{fortuneResult.title}</span>
+          </h3>
+          
+          <p className="text-gray-300/80 leading-relaxed mb-4">{fortuneResult.overview}</p>
+          
+          <div className="grid grid-cols-2 gap-3">
+            <div className="p-3 bg-[#0a0a0f]/50 rounded-lg border border-purple-500/10">
+              <h4 className="text-purple-400/80 text-xs mb-1">💼 事业</h4>
+              <p className="text-gray-300/70 text-sm">{fortuneResult.details.career}</p>
             </div>
-            
-            <div className="space-y-5">
-              <div className="p-4 bg-[#0a0a0f]/50 rounded-lg border border-purple-500/20 hover:border-purple-500/40 transition-colors">
-                <h4 className="text-purple-400 font-medium mb-2 flex items-center gap-2">
-                  <span>💼</span> 事业运
-                </h4>
-                <p className="text-gray-300/80">{fortuneResult.details.career}</p>
-              </div>
-              <div className="p-4 bg-[#0a0a0f]/50 rounded-lg border border-pink-500/20 hover:border-pink-500/40 transition-colors">
-                <h4 className="text-pink-400 font-medium mb-2 flex items-center gap-2">
-                  <span>💕</span> 感情运
-                </h4>
-                <p className="text-gray-300/80">{fortuneResult.details.love}</p>
-              </div>
-              <div className="p-4 bg-[#0a0a0f]/50 rounded-lg border border-yellow-500/20 hover:border-yellow-500/40 transition-colors">
-                <h4 className="text-yellow-400 font-medium mb-2 flex items-center gap-2">
-                  <span>💰</span> 财运
-                </h4>
-                <p className="text-gray-300/80">{fortuneResult.details.wealth}</p>
-              </div>
-              <div className="p-4 bg-[#0a0a0f]/50 rounded-lg border border-cyan-500/20 hover:border-cyan-500/40 transition-colors">
-                <h4 className="text-cyan-400 font-medium mb-2 flex items-center gap-2">
-                  <span>🏥</span> 健康运
-                </h4>
-                <p className="text-gray-300/80">{fortuneResult.details.health}</p>
-              </div>
+            <div className="p-3 bg-[#0a0a0f]/50 rounded-lg border border-pink-500/10">
+              <h4 className="text-pink-400/80 text-xs mb-1">💕 感情</h4>
+              <p className="text-gray-300/70 text-sm">{fortuneResult.details.love}</p>
+            </div>
+            <div className="p-3 bg-[#0a0a0f]/50 rounded-lg border border-yellow-500/10">
+              <h4 className="text-yellow-400/80 text-xs mb-1">💰 财运</h4>
+              <p className="text-gray-300/70 text-sm">{fortuneResult.details.wealth}</p>
+            </div>
+            <div className="p-3 bg-[#0a0a0f]/50 rounded-lg border border-cyan-500/10">
+              <h4 className="text-cyan-400/80 text-xs mb-1">🏥 健康</h4>
+              <p className="text-gray-300/70 text-sm">{fortuneResult.details.health}</p>
             </div>
           </div>
-        )}
+        </div>
 
-        {activeTab === 'tarot' && fortuneResult.tarot && (
-          <div className="bg-gradient-to-br from-[#1a1a2e]/90 to-[#0a0a0f]/90 backdrop-blur-md rounded-2xl p-8 shadow-2xl border border-pink-500/20 relative">
+        {/* 2. 塔罗牌 */}
+        {fortuneResult.tarot && (
+          <div className="bg-gradient-to-br from-[#1a1a2e]/90 to-[#0a0a0f]/90 backdrop-blur-md rounded-2xl p-6 shadow-2xl border border-pink-500/20 relative">
             <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1/2 h-px bg-gradient-to-r from-transparent via-pink-400 to-transparent"></div>
             
-            <div className="text-center mb-6">
-              <span className="inline-block px-4 py-1 bg-gradient-to-r from-pink-600/80 to-purple-500/80 rounded-full text-white text-sm">
-                {fortuneResult.tarot.level}
-              </span>
-            </div>
+            <h3 className="text-xl font-bold text-pink-400 mb-4 flex items-center gap-2">
+              <span>🃏</span> 塔罗牌
+              <span className="text-sm font-normal text-gray-500 ml-2">{fortuneResult.tarot.level}</span>
+            </h3>
 
             {/* 三张牌 */}
-            <div className="grid grid-cols-3 gap-4 mb-6">
+            <div className="flex justify-center gap-6 mb-4">
               {fortuneResult.tarot.cards.map((card, index) => (
                 <div key={index} className="text-center">
-                  <div className={`text-5xl mb-2 ${card.isReversed ? 'rotate-180' : ''}`}>
+                  <div className={`text-4xl mb-1 ${card.isReversed ? 'rotate-180' : ''}`}>
                     {card.symbol}
                   </div>
-                  <h4 className="text-sm font-medium text-white mb-1">
+                  <h4 className="text-xs font-medium text-white">
                     {card.name}
-                    {card.isReversed && <span className="text-pink-400 text-xs ml-1">逆位</span>}
+                    {card.isReversed && <span className="text-pink-400 text-[10px] ml-0.5">逆</span>}
                   </h4>
-                  <p className="text-xs text-gray-500">{card.position}</p>
+                  <p className="text-[10px] text-gray-500">{card.position}</p>
                 </div>
               ))}
             </div>
 
-            {/* 牌义解读 */}
-            <div className="space-y-4">
-              {fortuneResult.tarot.cards.map((card, index) => (
-                <div key={index} className="p-4 bg-[#0a0a0f]/50 rounded-lg border border-pink-500/20">
-                  <h4 className="text-pink-400 font-medium mb-2">
-                    {card.position} · {card.name}{card.isReversed ? '（逆位）' : ''}
-                  </h4>
-                  <p className="text-gray-300/80 text-sm">{card.meaning}</p>
-                </div>
-              ))}
-            </div>
-
-            {/* 综合解读 */}
-            <div className="mt-6 p-4 bg-gradient-to-r from-purple-900/30 to-pink-900/30 rounded-lg border border-purple-500/30">
-              <h4 className="text-purple-300 font-medium mb-2">🔮 综合解读</h4>
-              <p className="text-gray-300/80 text-sm">{fortuneResult.tarot.overview}</p>
-            </div>
+            <p className="text-gray-300/80 text-sm leading-relaxed">{fortuneResult.tarot.overview}</p>
           </div>
         )}
+
+        {/* 3. 占星术（待实现） */}
+        <div className="bg-gradient-to-br from-[#1a1a2e]/90 to-[#0a0a0f]/90 backdrop-blur-md rounded-2xl p-6 shadow-2xl border border-blue-500/20 relative opacity-50">
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1/2 h-px bg-gradient-to-r from-transparent via-blue-400 to-transparent"></div>
+          
+          <h3 className="text-xl font-bold text-blue-400 mb-4 flex items-center gap-2">
+            <span>⭐</span> 占星术
+            <span className="text-sm font-normal text-gray-500 ml-2">即将上线</span>
+          </h3>
+          
+          <p className="text-gray-400 text-sm">根据您的出生星盘，分析今日行星运行对您的影响...</p>
+        </div>
+
+        {/* 4. 地占术（待实现） */}
+        <div className="bg-gradient-to-br from-[#1a1a2e]/90 to-[#0a0a0f]/90 backdrop-blur-md rounded-2xl p-6 shadow-2xl border border-green-500/20 relative opacity-50">
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1/2 h-px bg-gradient-to-r from-transparent via-green-400 to-transparent"></div>
+          
+          <h3 className="text-xl font-bold text-green-400 mb-4 flex items-center gap-2">
+            <span>🌍</span> 地占术
+            <span className="text-sm font-normal text-gray-500 ml-2">即将上线</span>
+          </h3>
+          
+          <p className="text-gray-400 text-sm">古老的西方占卜术，通过大地符号解读命运...</p>
+        </div>
       </div>
     </div>
   )
