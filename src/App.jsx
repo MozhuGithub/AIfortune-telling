@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { getTodayFortune } from './lib/liuyao'
 
 // 用户信息弹窗组件
 function UserInfoModal({ isOpen, onClose, onSubmit, initialData }) {
@@ -212,50 +213,25 @@ function App() {
     }
   }, [])
 
-  // 模拟抽签结果
+  // 周易六爻算命
   const generateFortuneResult = () => {
-    const fortunes = [
-      {
-        title: '上上签',
-        fortuneLevel: '大吉大利',
-        overview: '命格清贵，贵人相助。事业方面将有重大突破，贵人运极佳，有望得到上司赏识或遇到重要合作伙伴。感情运势平稳向上，单身者有望邂逅良缘，已婚者家庭和睦。财运亨通，可适当投资理财。健康方面注意劳逸结合，保持良好作息。此签暗示您正处人生上升期，把握机遇，勇往直前。',
-        outfit: '今日宜穿红色系或暖色调服饰，搭配金色配饰，增强气场与贵人运，建议选择明亮色彩提升整体运势。',
-        sleep: '建议23点前入睡，保持卧室通风，有助于运势提升。',
-        details: {
-          career: '事业运势极佳，贵人相助，有望升职加薪或遇到重要合作机会。',
-          love: '感情运势平稳，单身者有望遇到心仪对象，已婚者家庭幸福美满。',
-          wealth: '财运亨通，正财偏财皆有收获，可适当投资理财。',
-          health: '健康运势良好，注意劳逸结合，保持规律作息。'
-        }
-      },
-      {
-        title: '上签',
-        fortuneLevel: '吉星高照',
-        overview: '运势向好，稳中有进。事业方面进展顺利，虽然可能遇到一些小挑战，但都能迎刃而解。感情方面需要多一些耐心和包容，真诚待人会有意外收获。财运平稳，不宜冒进，宜稳健理财。健康方面注意饮食均衡，适量运动。此签提示您保持积极心态，稳扎稳打必有收获。',
-        outfit: '今日宜穿蓝色或绿色系服饰，稳重而不失活力，避免过于鲜艳的颜色，搭配简约风格更显气质。',
-        sleep: '建议23:30前入睡，睡前避免剧烈运动，有助于明日精力充沛。',
-        details: {
-          career: '事业稳步发展，可能有小挑战但能顺利解决。',
-          love: '感情需要耐心经营，真诚待人会有好结果。',
-          wealth: '财运平稳，不宜冒险投资，宜稳健理财。',
-          health: '健康无大碍，注意饮食和适量运动。'
-        }
-      },
-      {
-        title: '中签',
-        fortuneLevel: '平稳顺利',
-        overview: '运势平稳，不急不躁。事业方面保持现状即可，不宜有大的变动，静待时机成熟。感情方面可能有些许波折，需要多沟通理解，用心经营。财运一般，不宜投机，宜守不宜攻。健康方面注意情绪调节，保持心情愉悦。此签暗示您当前宜静不宜动，韬光养晦，蓄势待发。',
-        outfit: '今日宜穿素色或浅色系服饰，低调内敛为佳，避免过于张扬的颜色，简约搭配更显沉稳。',
-        sleep: '建议22:30前入睡，保持心情平静，有助于稳定情绪。',
-        details: {
-          career: '事业平稳，不宜有大的变动，静待时机。',
-          love: '感情有些波折，需要多沟通和包容。',
-          wealth: '财运一般，不宜投机取巧，守成为上。',
-          health: '注意情绪管理，保持心态平和。'
-        }
-      }
-    ]
-    return fortunes[Math.floor(Math.random() * fortunes.length)]
+    if (!userInfo) return null
+    
+    const result = getTodayFortune(
+      userInfo.birthDate,
+      userInfo.birthHour,
+      userInfo.gender
+    )
+    
+    return {
+      title: result.title,
+      fortuneLevel: result.level,
+      overview: result.overview,
+      outfit: result.outfit,
+      sleep: result.sleep,
+      details: result.details,
+      guaInfo: result.guaInfo
+    }
   }
 
   // 处理抽签点击
@@ -263,10 +239,12 @@ function App() {
     if (userInfo) {
       // 已有用户信息，直接抽签
       const result = generateFortuneResult()
-      result.userInfo = userInfo
-      setFortuneResult(result)
-      localStorage.setItem('fortune_result', JSON.stringify(result))
-      localStorage.setItem('fortune_resultDate', new Date().toDateString())
+      if (result) {
+        result.userInfo = userInfo
+        setFortuneResult(result)
+        localStorage.setItem('fortune_result', JSON.stringify(result))
+        localStorage.setItem('fortune_resultDate', new Date().toDateString())
+      }
     } else {
       // 没有用户信息，弹窗填写
       setShowModal(true)
@@ -280,7 +258,11 @@ function App() {
     setShowModal(false)
     
     // 开始抽签
-    const result = generateFortuneResult()
+    const result = getTodayFortune(
+      data.birthDate,
+      data.birthHour,
+      data.gender
+    )
     result.userInfo = data
     setFortuneResult(result)
     localStorage.setItem('fortune_result', JSON.stringify(result))
