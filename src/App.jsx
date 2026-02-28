@@ -125,10 +125,11 @@ function UserInfoModal({ isOpen, onClose, onSubmit, initialData }) {
 }
 
 // 抽签结果总览组件
-function FortuneOverview({ result, userInfo, onDrawAgain }) {
+function FortuneOverview({ result, onDrawAgain }) {
   return (
     <div className="flex flex-col items-center justify-center min-h-[80vh] px-4">
       <div className="w-full max-w-2xl bg-gray-800/50 backdrop-blur-sm rounded-2xl p-8 shadow-2xl border border-gray-700">
+        <h3 className="text-sm text-gray-400 text-center mb-4">今日签运</h3>
         <h2 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 via-orange-400 to-red-400 text-center mb-6">
           {result.title}
         </h2>
@@ -140,13 +141,7 @@ function FortuneOverview({ result, userInfo, onDrawAgain }) {
         <p className="text-gray-200 text-lg leading-relaxed text-center mb-8">
           {result.overview}
         </p>
-        <div className="flex justify-center gap-4">
-          <button 
-            onClick={() => window.location.reload()}
-            className="px-6 py-3 bg-gray-700 text-white rounded-lg hover:bg-gray-600 transition-colors"
-          >
-            重新抽签
-          </button>
+        <div className="flex justify-center">
           <button 
             onClick={onDrawAgain}
             className="px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold rounded-lg hover:from-purple-700 hover:to-pink-700 transition-all"
@@ -154,6 +149,9 @@ function FortuneOverview({ result, userInfo, onDrawAgain }) {
             查看详情
           </button>
         </div>
+        <p className="text-gray-500 text-xs text-center mt-6">
+          每日仅能抽签一次
+        </p>
       </div>
     </div>
   )
@@ -260,8 +258,7 @@ function App() {
         if (fortuneResult) {
           return (
             <FortuneOverview 
-              result={fortuneResult} 
-              userInfo={userInfo}
+              result={fortuneResult}
               onDrawAgain={() => setCurrentPage('fortune')}
             />
           )
@@ -270,6 +267,7 @@ function App() {
         // 否则显示抽签前的首页
         return (
           <div className="flex flex-col items-center justify-center min-h-[80vh]">
+            <p className="text-sm text-gray-400 mb-4">今日签运</p>
             <h1 className="text-5xl md:text-7xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 animate-pulse drop-shadow-2xl mb-8">
               AI Fortune Telling
             </h1>
@@ -282,6 +280,9 @@ function App() {
             >
               每日一签
             </button>
+            <p className="text-gray-500 text-xs mt-6">
+              每日仅能抽签一次
+            </p>
           </div>
         )
       
