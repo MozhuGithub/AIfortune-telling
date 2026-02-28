@@ -752,11 +752,11 @@ function App() {
                 </p>
                 <div className="py-6 border-t border-b border-purple-500/20">
                   <p className="text-purple-400 font-medium">邮箱</p>
-                  <p className="text-white mt-2">contact@aifortune.example.com</p>
+                  <p className="text-white mt-2">moyejunlin@foxmail.com</p>
                 </div>
                 <div className="py-6 border-b border-purple-500/20">
                   <p className="text-cyan-400 font-medium">微信公众号</p>
-                  <p className="text-white mt-2">AI算命大师</p>
+                  <p className="text-white mt-2">kn</p>
                 </div>
                 <p className="text-gray-500 text-sm mt-6">
                   © 2026 AI 算命. All rights reserved.
