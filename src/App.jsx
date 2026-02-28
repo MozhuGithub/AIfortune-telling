@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { getTodayFortune } from './lib/liuyao'
 import { getTarotReading } from './lib/tarot'
+import { getAstrologyReading } from './lib/astrology'
 
 // 命理详情页组件
 function FortuneDetail({ fortuneResult, setCurrentPage }) {
@@ -57,45 +58,92 @@ function FortuneDetail({ fortuneResult, setCurrentPage }) {
         </div>
 
         {/* 2. 塔罗牌 */}
-        {fortuneResult.tarot && (
-          <div className="bg-gradient-to-br from-[#1a1a2e]/90 to-[#0a0a0f]/90 backdrop-blur-md rounded-2xl p-6 shadow-2xl border border-pink-500/20 relative">
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1/2 h-px bg-gradient-to-r from-transparent via-pink-400 to-transparent"></div>
-            
-            <h3 className="text-xl font-bold text-pink-400 mb-4 flex items-center gap-2">
-              <span>🃏</span> 塔罗牌
+        <div className="bg-gradient-to-br from-[#1a1a2e]/90 to-[#0a0a0f]/90 backdrop-blur-md rounded-2xl p-6 shadow-2xl border border-pink-500/20 relative">
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1/2 h-px bg-gradient-to-r from-transparent via-pink-400 to-transparent"></div>
+          
+          <h3 className="text-xl font-bold text-pink-400 mb-4 flex items-center gap-2">
+            <span>🃏</span> 塔罗牌
+            {fortuneResult.tarot && (
               <span className="text-sm font-normal text-gray-500 ml-2">{fortuneResult.tarot.level}</span>
-            </h3>
+            )}
+          </h3>
 
-            {/* 三张牌 */}
-            <div className="flex justify-center gap-6 mb-4">
-              {fortuneResult.tarot.cards.map((card, index) => (
-                <div key={index} className="text-center">
-                  <div className={`text-4xl mb-1 ${card.isReversed ? 'rotate-180' : ''}`}>
-                    {card.symbol}
+          {fortuneResult.tarot ? (
+            <>
+              {/* 三张牌 */}
+              <div className="flex justify-center gap-6 mb-4">
+                {fortuneResult.tarot.cards.map((card, index) => (
+                  <div key={index} className="text-center">
+                    <div className={`text-4xl mb-1 ${card.isReversed ? 'rotate-180' : ''}`}>
+                      {card.symbol}
+                    </div>
+                    <h4 className="text-xs font-medium text-white">
+                      {card.name}
+                      {card.isReversed && <span className="text-pink-400 text-[10px] ml-0.5">逆</span>}
+                    </h4>
+                    <p className="text-[10px] text-gray-500">{card.position}</p>
                   </div>
-                  <h4 className="text-xs font-medium text-white">
-                    {card.name}
-                    {card.isReversed && <span className="text-pink-400 text-[10px] ml-0.5">逆</span>}
-                  </h4>
-                  <p className="text-[10px] text-gray-500">{card.position}</p>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
 
-            <p className="text-gray-300/80 text-sm leading-relaxed">{fortuneResult.tarot.overview}</p>
-          </div>
-        )}
+              <p className="text-gray-300/80 text-sm leading-relaxed">{fortuneResult.tarot.overview}</p>
+            </>
+          ) : (
+            <p className="text-gray-400 text-sm">请重新抽签以获取塔罗牌解读</p>
+          )}
+        </div>
 
-        {/* 3. 占星术（待实现） */}
-        <div className="bg-gradient-to-br from-[#1a1a2e]/90 to-[#0a0a0f]/90 backdrop-blur-md rounded-2xl p-6 shadow-2xl border border-blue-500/20 relative opacity-50">
+        {/* 3. 占星术 */}
+        <div className="bg-gradient-to-br from-[#1a1a2e]/90 to-[#0a0a0f]/90 backdrop-blur-md rounded-2xl p-6 shadow-2xl border border-blue-500/20 relative">
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1/2 h-px bg-gradient-to-r from-transparent via-blue-400 to-transparent"></div>
           
           <h3 className="text-xl font-bold text-blue-400 mb-4 flex items-center gap-2">
             <span>⭐</span> 占星术
-            <span className="text-sm font-normal text-gray-500 ml-2">即将上线</span>
+            {fortuneResult.astrology && (
+              <span className="text-sm font-normal text-gray-500 ml-2">{fortuneResult.astrology.level}</span>
+            )}
           </h3>
-          
-          <p className="text-gray-400 text-sm">根据您的出生星盘，分析今日行星运行对您的影响...</p>
+
+          {fortuneResult.astrology ? (
+            <>
+              {/* 星盘信息 */}
+              <div className="flex justify-center gap-4 mb-4">
+                <div className="text-center px-3 py-2 bg-[#0a0a0f]/50 rounded-lg">
+                  <div className="text-2xl mb-1">{fortuneResult.astrology.sunSign.symbol}</div>
+                  <p className="text-[10px] text-gray-400">太阳</p>
+                  <p className="text-xs text-white">{fortuneResult.astrology.sunSign.name}</p>
+                </div>
+                <div className="text-center px-3 py-2 bg-[#0a0a0f]/50 rounded-lg">
+                  <div className="text-2xl mb-1">{fortuneResult.astrology.moonSign.symbol}</div>
+                  <p className="text-[10px] text-gray-400">月亮</p>
+                  <p className="text-xs text-white">{fortuneResult.astrology.moonSign.name}</p>
+                </div>
+                <div className="text-center px-3 py-2 bg-[#0a0a0f]/50 rounded-lg">
+                  <div className="text-2xl mb-1">{fortuneResult.astrology.risingSign.symbol}</div>
+                  <p className="text-[10px] text-gray-400">上升</p>
+                  <p className="text-xs text-white">{fortuneResult.astrology.risingSign.name}</p>
+                </div>
+              </div>
+
+              {/* 今日天象 */}
+              <div className="mb-3 p-3 bg-gradient-to-r from-blue-900/20 to-purple-900/20 rounded-lg border border-blue-500/20">
+                <p className="text-blue-300 text-xs">
+                  🌌 今日天象：{fortuneResult.astrology.todayAspect.name}
+                </p>
+                <p className="text-gray-400 text-xs mt-1">{fortuneResult.astrology.todayAspect.effect}</p>
+              </div>
+
+              <p className="text-gray-300/80 text-sm leading-relaxed">{fortuneResult.astrology.overview}</p>
+
+              {/* 幸运元素 */}
+              <div className="mt-3 flex gap-4 text-xs">
+                <span className="text-gray-500">幸运色：{fortuneResult.astrology.dailyReading.lucky}</span>
+                <span className="text-gray-500">幸运数：{fortuneResult.astrology.dailyReading.number}</span>
+              </div>
+            </>
+          ) : (
+            <p className="text-gray-400 text-sm">请重新抽签以获取占星术解读</p>
+          )}
         </div>
 
         {/* 4. 地占术（待实现） */}
@@ -342,9 +390,16 @@ function App() {
       userInfo.gender
     )
     
+    const astrologyResult = getAstrologyReading(
+      userInfo.birthDate,
+      userInfo.birthHour,
+      userInfo.gender
+    )
+    
     return {
       ...liuyaoResult,
-      tarot: tarotResult
+      tarot: tarotResult,
+      astrology: astrologyResult
     }
   }
 
@@ -371,7 +426,7 @@ function App() {
     localStorage.setItem('fortune_userInfo', JSON.stringify(data))
     setShowModal(false)
     
-    // 开始抽签 - 同时获取六爻和塔罗
+    // 开始抽签 - 同时获取六爻、塔罗和占星
     const liuyaoResult = getTodayFortune(
       data.birthDate,
       data.birthHour,
@@ -384,9 +439,16 @@ function App() {
       data.gender
     )
     
+    const astrologyResult = getAstrologyReading(
+      data.birthDate,
+      data.birthHour,
+      data.gender
+    )
+    
     const result = {
       ...liuyaoResult,
       tarot: tarotResult,
+      astrology: astrologyResult,
       userInfo: data
     }
     
