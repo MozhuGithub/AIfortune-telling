@@ -138,7 +138,7 @@ function FortuneOverview({ result, onDrawAgain }) {
         <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-1/2 h-px bg-gradient-to-r from-transparent via-purple-500 to-transparent"></div>
         
         <h3 className="text-sm text-purple-400/60 text-center mb-4 tracking-[0.3em]">今日签运</h3>
-        <h2 className="text-4xl font-bold text-center mb-6" style={{color: '#ffd700', textShadow: '0 0 20px rgba(255, 215, 0, 0.5)'}}>
+        <h2 className="text-4xl font-bold text-center mb-6 w-full" style={{color: '#ffd700', textShadow: '0 0 20px rgba(255, 215, 0, 0.5)'}}>
           {result.title}
         </h2>
         <div className="text-center mb-6">
@@ -157,8 +157,8 @@ function FortuneOverview({ result, onDrawAgain }) {
             查看详情 →
           </button>
         </div>
-        <p className="text-gray-500/60 text-xs text-center mt-6 tracking-wider">
-          ✧ 每日仅能抽签一次 ✧
+        <p className="text-gray-500/60 text-xs text-center mt-6">
+          每日仅能抽签一次
         </p>
       </div>
 
@@ -324,8 +324,8 @@ function App() {
             >
               ✧ 每日一签 ✧
             </button>
-            <p className="text-gray-500/50 text-xs mt-6 tracking-wider">
-              ✧ 每日仅能抽签一次 ✧
+            <p className="text-gray-500/50 text-xs mt-6">
+              每日仅能抽签一次
             </p>
           </div>
         )
