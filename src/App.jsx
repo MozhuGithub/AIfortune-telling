@@ -244,6 +244,92 @@ function generateCombinedOverview(result) {
   return overview
 }
 
+// 整合四术生成穿搭建议
+function generateCombinedOutfit(result) {
+  if (!result) return '今日宜穿着舒适得体的服饰，保持良好心态。'
+  
+  const tips = []
+  
+  // 六爻穿搭建议（取关键信息）
+  if (result.outfit) {
+    // 提取颜色关键词
+    const colorMatch = result.outfit.match(/(红色|蓝色|绿色|黄色|白色|黑色|金色|紫色|粉色|橙色|灰色|银色|暖色|素色|淡色|深色|亮色)/)
+    if (colorMatch) {
+      tips.push(colorMatch[1])
+    }
+  }
+  
+  // 占星幸运色
+  if (result.astrology?.dailyReading?.lucky) {
+    tips.push(result.astrology.dailyReading.lucky + '系')
+  }
+  
+  // 地占元素
+  if (result.geomancy?.mainFigure?.element) {
+    const elementColors = {
+      '火': '红橙暖色',
+      '水': '蓝黑冷色',
+      '土': '黄棕大地色',
+      '气': '白灰清新色'
+    }
+    const elemColor = elementColors[result.geomancy.mainFigure.element]
+    if (elemColor) tips.push(elemColor)
+  }
+  
+  // 去重并生成建议
+  const uniqueTips = [...new Set(tips)].slice(0, 3)
+  
+  if (uniqueTips.length > 0) {
+    return `今日宜穿${uniqueTips.join('、')}服饰，搭配简约配饰，增强整体运势与气场。`
+  }
+  
+  return result.outfit || '今日宜穿着舒适得体的服饰，保持自信。'
+}
+
+// 整合四术生成睡眠建议
+function generateCombinedSleep(result) {
+  if (!result) return '建议23点前入睡，保持规律作息。'
+  
+  const tips = []
+  
+  // 六爻睡眠建议（提取时间）
+  if (result.sleep) {
+    const timeMatch = result.sleep.match(/(\d{1,2}[:：]?\d{0,2}|(\d{1,2})点)/)
+    if (timeMatch) {
+      tips.push(timeMatch[1] + '前入睡')
+    }
+  }
+  
+  // 地占元素对应的睡眠建议
+  if (result.geomancy?.mainFigure?.element) {
+    const sleepByElement = {
+      '火': '睡前避免剧烈运动',
+      '水': '保持卧室安静',
+      '土': '注意保暖',
+      '气': '保持通风'
+    }
+    const elemTip = sleepByElement[result.geomancy.mainFigure.element]
+    if (elemTip) tips.push(elemTip)
+  }
+  
+  // 塔罗牌暗示
+  if (result.tarot?.cards) {
+    const hasMoonCard = result.tarot.cards.some(c => c.name.includes('月亮') || c.name.includes('隐士'))
+    if (hasMoonCard) {
+      tips.push('有助于好梦')
+    }
+  }
+  
+  // 去重并生成建议
+  const uniqueTips = [...new Set(tips)].slice(0, 2)
+  
+  if (uniqueTips.length > 0) {
+    return `建议${uniqueTips.join('，')}，有助于恢复精力。`
+  }
+  
+  return result.sleep || '建议23点前入睡，保持规律作息。'
+}
+
 // 用户信息弹窗组件
 function UserInfoModal({ isOpen, onClose, onSubmit, initialData }) {
   const [formData, setFormData] = useState({
@@ -414,7 +500,7 @@ function FortuneOverview({ result, onDrawAgain }) {
             <span className="text-lg">👗</span> 今日穿搭推荐
           </h4>
           <p className="text-gray-300/80 text-sm leading-relaxed">
-            {result.outfit}
+            {generateCombinedOutfit(result)}
           </p>
         </div>
         <div className="bg-gradient-to-br from-[#1a1a2e]/80 to-[#0a0a0f]/80 backdrop-blur-md rounded-xl p-6 shadow-xl border border-cyan-500/20 card-float relative overflow-hidden">
@@ -423,7 +509,7 @@ function FortuneOverview({ result, onDrawAgain }) {
             <span className="text-lg">🌙</span> 今日睡眠建议
           </h4>
           <p className="text-gray-300/80 text-sm leading-relaxed">
-            {result.sleep}
+            {generateCombinedSleep(result)}
           </p>
         </div>
       </div>
