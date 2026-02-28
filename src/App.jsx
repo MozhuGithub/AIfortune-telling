@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { getTodayFortune } from './lib/liuyao'
 import { getTarotReading } from './lib/tarot'
 import { getAstrologyReading } from './lib/astrology'
+import { getGeomancyReading } from './lib/geomancy'
 
 // 命理详情页组件
 function FortuneDetail({ fortuneResult, setCurrentPage }) {
@@ -146,16 +147,56 @@ function FortuneDetail({ fortuneResult, setCurrentPage }) {
           )}
         </div>
 
-        {/* 4. 地占术（待实现） */}
-        <div className="bg-gradient-to-br from-[#1a1a2e]/90 to-[#0a0a0f]/90 backdrop-blur-md rounded-2xl p-6 shadow-2xl border border-green-500/20 relative opacity-50">
+        {/* 4. 地占术 */}
+        <div className="bg-gradient-to-br from-[#1a1a2e]/90 to-[#0a0a0f]/90 backdrop-blur-md rounded-2xl p-6 shadow-2xl border border-green-500/20 relative">
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1/2 h-px bg-gradient-to-r from-transparent via-green-400 to-transparent"></div>
           
           <h3 className="text-xl font-bold text-green-400 mb-4 flex items-center gap-2">
             <span>🌍</span> 地占术
-            <span className="text-sm font-normal text-gray-500 ml-2">即将上线</span>
+            {fortuneResult.geomancy && (
+              <span className="text-sm font-normal text-gray-500 ml-2">{fortuneResult.geomancy.level}</span>
+            )}
           </h3>
-          
-          <p className="text-gray-400 text-sm">古老的西方占卜术，通过大地符号解读命运...</p>
+
+          {fortuneResult.geomancy ? (
+            <>
+              {/* 三卦展示 */}
+              <div className="flex justify-center gap-4 mb-4">
+                <div className="text-center px-3 py-2 bg-[#0a0a0f]/50 rounded-lg">
+                  <div className="text-lg mb-1 font-mono text-green-300">{fortuneResult.geomancy.leftFigure.symbol}</div>
+                  <p className="text-[10px] text-gray-400">左卦</p>
+                  <p className="text-xs text-white">{fortuneResult.geomancy.leftFigure.name}</p>
+                </div>
+                <div className="text-center px-4 py-2 bg-green-900/20 rounded-lg border border-green-500/30">
+                  <div className="text-xl mb-1 font-mono text-green-300">{fortuneResult.geomancy.mainFigure.symbol}</div>
+                  <p className="text-[10px] text-green-400">主卦</p>
+                  <p className="text-sm text-white font-medium">{fortuneResult.geomancy.mainFigure.name}</p>
+                </div>
+                <div className="text-center px-3 py-2 bg-[#0a0a0f]/50 rounded-lg">
+                  <div className="text-lg mb-1 font-mono text-green-300">{fortuneResult.geomancy.rightFigure.symbol}</div>
+                  <p className="text-[10px] text-gray-400">右卦</p>
+                  <p className="text-xs text-white">{fortuneResult.geomancy.rightFigure.name}</p>
+                </div>
+              </div>
+
+              {/* 卦象信息 */}
+              <div className="mb-3 flex justify-center gap-4 text-xs text-gray-500">
+                <span>元素：{fortuneResult.geomancy.mainFigure.element}</span>
+                <span>守护：{fortuneResult.geomancy.mainFigure.planet}</span>
+              </div>
+
+              <p className="text-gray-300/80 text-sm leading-relaxed">{fortuneResult.geomancy.overview}</p>
+
+              {/* 建议 */}
+              <div className="mt-3 p-3 bg-gradient-to-r from-green-900/20 to-emerald-900/20 rounded-lg border border-green-500/20">
+                <p className="text-green-300 text-xs">
+                  💡 {fortuneResult.geomancy.mainFigure.advice}
+                </p>
+              </div>
+            </>
+          ) : (
+            <p className="text-gray-400 text-sm">请重新抽签以获取地占术解读</p>
+          )}
         </div>
       </div>
     </div>
@@ -396,10 +437,17 @@ function App() {
       userInfo.gender
     )
     
+    const geomancyResult = getGeomancyReading(
+      userInfo.birthDate,
+      userInfo.birthHour,
+      userInfo.gender
+    )
+    
     return {
       ...liuyaoResult,
       tarot: tarotResult,
-      astrology: astrologyResult
+      astrology: astrologyResult,
+      geomancy: geomancyResult
     }
   }
 
@@ -426,29 +474,17 @@ function App() {
     localStorage.setItem('fortune_userInfo', JSON.stringify(data))
     setShowModal(false)
     
-    // 开始抽签 - 同时获取六爻、塔罗和占星
-    const liuyaoResult = getTodayFortune(
-      data.birthDate,
-      data.birthHour,
-      data.gender
-    )
-    
-    const tarotResult = getTarotReading(
-      data.birthDate,
-      data.birthHour,
-      data.gender
-    )
-    
-    const astrologyResult = getAstrologyReading(
-      data.birthDate,
-      data.birthHour,
-      data.gender
-    )
+    // 开始抽签 - 四大占卜术
+    const liuyaoResult = getTodayFortune(data.birthDate, data.birthHour, data.gender)
+    const tarotResult = getTarotReading(data.birthDate, data.birthHour, data.gender)
+    const astrologyResult = getAstrologyReading(data.birthDate, data.birthHour, data.gender)
+    const geomancyResult = getGeomancyReading(data.birthDate, data.birthHour, data.gender)
     
     const result = {
       ...liuyaoResult,
       tarot: tarotResult,
       astrology: astrologyResult,
+      geomancy: geomancyResult,
       userInfo: data
     }
     
