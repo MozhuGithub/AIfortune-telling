@@ -332,18 +332,36 @@ function generateCombinedSleep(result) {
 
 // 用户信息弹窗组件
 function UserInfoModal({ isOpen, onClose, onSubmit, initialData }) {
+  // 解析初始日期
+  const parseDate = (dateStr) => {
+    if (!dateStr) return { year: '', month: '', day: '' }
+    const parts = dateStr.split('-')
+    return {
+      year: parts[0] || '',
+      month: parts[1] || '',
+      day: parts[2] || ''
+    }
+  }
+  
+  const initialDate = parseDate(initialData?.birthDate)
+  
   const [formData, setFormData] = useState({
     name: initialData?.name || '',
-    birthDate: initialData?.birthDate || '',
+    birthYear: initialDate.year,
+    birthMonth: initialDate.month,
+    birthDay: initialDate.day,
     birthHour: initialData?.birthHour || '',
     gender: initialData?.gender || ''
   })
 
   useEffect(() => {
     if (initialData) {
+      const date = parseDate(initialData.birthDate)
       setFormData({
         name: initialData.name || '',
-        birthDate: initialData.birthDate || '',
+        birthYear: date.year,
+        birthMonth: date.month,
+        birthDay: date.day,
         birthHour: initialData.birthHour || '',
         gender: initialData.gender || ''
       })
@@ -352,10 +370,35 @@ function UserInfoModal({ isOpen, onClose, onSubmit, initialData }) {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    onSubmit(formData)
+    // 组装日期字符串
+    const birthDate = `${formData.birthYear}-${formData.birthMonth}-${formData.birthDay}`
+    onSubmit({
+      name: formData.name,
+      birthDate,
+      birthHour: formData.birthHour,
+      gender: formData.gender
+    })
   }
 
   if (!isOpen) return null
+
+  // 生成年份选项（1950-2010）
+  const years = []
+  for (let y = 2010; y >= 1950; y--) {
+    years.push(y)
+  }
+  
+  // 生成月份选项
+  const months = []
+  for (let m = 1; m <= 12; m++) {
+    months.push(m.toString().padStart(2, '0'))
+  }
+  
+  // 生成日期选项
+  const days = []
+  for (let d = 1; d <= 31; d++) {
+    days.push(d.toString().padStart(2, '0'))
+  }
 
   return (
     <div className="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
@@ -378,13 +421,41 @@ function UserInfoModal({ isOpen, onClose, onSubmit, initialData }) {
           </div>
           <div>
             <label className="block text-purple-300 mb-2 text-sm">出生日期</label>
-            <input 
-              type="date" 
-              required
-              value={formData.birthDate}
-              onChange={(e) => setFormData({...formData, birthDate: e.target.value})}
-              className="w-full px-4 py-3 bg-[#0a0a0f]/50 border border-purple-500/30 rounded-lg text-white focus:outline-none focus:border-cyan-400 focus:shadow-[0_0_10px_rgba(0,212,255,0.3)] transition-all"
-            />
+            <div className="grid grid-cols-3 gap-2">
+              <select 
+                required
+                value={formData.birthYear}
+                onChange={(e) => setFormData({...formData, birthYear: e.target.value})}
+                className="px-3 py-3 bg-[#0a0a0f]/50 border border-purple-500/30 rounded-lg text-white focus:outline-none focus:border-cyan-400 transition-all appearance-none"
+              >
+                <option value="">年</option>
+                {years.map(y => (
+                  <option key={y} value={y}>{y}</option>
+                ))}
+              </select>
+              <select 
+                required
+                value={formData.birthMonth}
+                onChange={(e) => setFormData({...formData, birthMonth: e.target.value})}
+                className="px-3 py-3 bg-[#0a0a0f]/50 border border-purple-500/30 rounded-lg text-white focus:outline-none focus:border-cyan-400 transition-all appearance-none"
+              >
+                <option value="">月</option>
+                {months.map(m => (
+                  <option key={m} value={m}>{m}</option>
+                ))}
+              </select>
+              <select 
+                required
+                value={formData.birthDay}
+                onChange={(e) => setFormData({...formData, birthDay: e.target.value})}
+                className="px-3 py-3 bg-[#0a0a0f]/50 border border-purple-500/30 rounded-lg text-white focus:outline-none focus:border-cyan-400 transition-all appearance-none"
+              >
+                <option value="">日</option>
+                {days.map(d => (
+                  <option key={d} value={d}>{d}</option>
+                ))}
+              </select>
+            </div>
           </div>
           <div>
             <label className="block text-purple-300 mb-2 text-sm">出生时辰</label>
