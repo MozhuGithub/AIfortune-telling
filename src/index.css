@@ -1,1 +1,6 @@
 @import "tailwindcss";
+
+/* 设置思源宋体为全局字体 */
+body {
+  font-family: 'Noto Serif SC', serif;
+}
