@@ -137,8 +137,8 @@ function FortuneOverview({ result, onDrawAgain }) {
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1/2 h-px bg-gradient-to-r from-transparent via-cyan-400 to-transparent"></div>
         <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-1/2 h-px bg-gradient-to-r from-transparent via-purple-500 to-transparent"></div>
         
-        <h3 className="text-sm text-purple-400/60 text-center mb-4 tracking-widest">✧ 今日签运 ✧</h3>
-        <h2 className="text-4xl font-bold text-center mb-6 gradient-text-fire neon-glow" style={{color: '#ffd700'}}>
+        <h3 className="text-sm text-purple-400/60 text-center mb-4 tracking-[0.3em]">今日签运</h3>
+        <h2 className="text-4xl font-bold text-center mb-6" style={{color: '#ffd700', textShadow: '0 0 20px rgba(255, 215, 0, 0.5)'}}>
           {result.title}
         </h2>
         <div className="text-center mb-6">
@@ -311,7 +311,7 @@ function App() {
               <div className="absolute bottom-1/3 right-1/3 w-1 h-1 bg-yellow-400 rounded-full star" style={{animationDelay: '1.5s'}}></div>
             </div>
             
-            <p className="text-sm text-purple-400/60 mb-4 tracking-widest">✧ 今日签运 ✧</p>
+            <p className="text-sm text-purple-400/60 mb-4 tracking-[0.3em]">今日签运</p>
             <h1 className="text-5xl md:text-7xl font-bold mb-8 gradient-text-neon glitch-text">
               AI 算命
             </h1>
