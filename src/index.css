@@ -1,1 +1,141 @@
 @import "tailwindcss";
+
+/* 中式水墨 + AI科技 + 西式神秘 + 赛博朋克 风格 */
+
+/* 全局样式 */
+body {
+  background: linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 50%, #16213e 100%);
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* 水墨云雾背景效果 */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    radial-gradient(ellipse at 20% 20%, rgba(100, 100, 150, 0.08) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 80%, rgba(80, 80, 120, 0.06) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 50%, rgba(60, 60, 100, 0.04) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* 霓虹发光效果 */
+.neon-glow {
+  text-shadow: 
+    0 0 5px currentColor,
+    0 0 10px currentColor,
+    0 0 20px currentColor,
+    0 0 40px currentColor;
+}
+
+/* 赛博朋克边框 */
+.cyber-border {
+  border: 1px solid transparent;
+  background: 
+    linear-gradient(#1a1a2e, #1a1a2e) padding-box,
+    linear-gradient(135deg, #ff6b9d, #c44cff, #6b5bff, #00d4ff) border-box;
+}
+
+/* 金色神秘边框 */
+.mystic-border {
+  border: 1px solid rgba(255, 215, 0, 0.3);
+  box-shadow: 
+    0 0 20px rgba(255, 215, 0, 0.1),
+    inset 0 0 20px rgba(255, 215, 0, 0.05);
+}
+
+/* 星星闪烁动画 */
+@keyframes twinkle {
+  0%, 100% { opacity: 0.3; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.2); }
+}
+
+.star {
+  animation: twinkle 2s ease-in-out infinite;
+}
+
+/* 赛博朋克扫描线 */
+@keyframes scanline {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100vh); }
+}
+
+.scanline::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(0, 212, 255, 0.5), transparent);
+  animation: scanline 8s linear infinite;
+  pointer-events: none;
+  z-index: 100;
+}
+
+/* 故障效果 */
+@keyframes glitch {
+  0%, 90%, 100% { transform: translate(0); }
+  92% { transform: translate(-2px, 1px); }
+  94% { transform: translate(2px, -1px); }
+  96% { transform: translate(-1px, 2px); }
+  98% { transform: translate(1px, -2px); }
+}
+
+.glitch-text:hover {
+  animation: glitch 0.3s ease-in-out;
+}
+
+/* 渐变文字 */
+.gradient-text-fire {
+  background: linear-gradient(135deg, #ffd700, #ff8c00, #ff4500);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.gradient-text-neon {
+  background: linear-gradient(135deg, #ff6b9d, #c44cff, #6b5bff, #00d4ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.gradient-text-gold {
+  background: linear-gradient(135deg, #ffd700, #ffb347, #ffd700);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* 卡片悬浮效果 */
+.card-float {
+  transition: all 0.3s ease;
+}
+
+.card-float:hover {
+  transform: translateY(-5px);
+  box-shadow: 
+    0 10px 40px rgba(196, 76, 255, 0.2),
+    0 0 20px rgba(0, 212, 255, 0.1);
+}
+
+/* 水墨晕染效果 */
+.ink-wash {
+  background: radial-gradient(ellipse at center, rgba(255,255,255,0.03) 0%, transparent 70%);
+}
+
+/* 神秘符号装饰 */
+.mystic-symbol::before {
+  content: '✧';
+  position: absolute;
+  color: rgba(255, 215, 0, 0.3);
+  font-size: 12px;
+}
