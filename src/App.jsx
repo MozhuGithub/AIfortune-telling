@@ -1,5 +1,144 @@
 import { useState, useEffect } from 'react'
 import { getTodayFortune } from './lib/liuyao'
+import { getTarotReading } from './lib/tarot'
+
+// 命理详情页组件（带Tab切换）
+function FortuneDetail({ fortuneResult, setCurrentPage }) {
+  const [activeTab, setActiveTab] = useState('liuyao')
+
+  if (!fortuneResult) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[80vh] text-gray-400">
+        <p>您还没有抽签，请先返回首页进行抽签</p>
+        <button 
+          onClick={() => setCurrentPage('home')}
+          className="mt-4 px-6 py-2 bg-gradient-to-r from-purple-600 to-cyan-500 text-white rounded-lg hover:shadow-[0_0_20px_rgba(196,76,255,0.4)] transition-all"
+        >
+          去抽签
+        </button>
+      </div>
+    )
+  }
+
+  const tabs = [
+    { key: 'liuyao', label: '周易六爻', icon: '☯️' },
+    { key: 'tarot', label: '塔罗牌', icon: '🃏' }
+  ]
+
+  return (
+    <div className="flex flex-col items-center min-h-[80vh] px-4 py-8 relative scanline">
+      <h2 className="text-4xl font-bold mb-8 gradient-text-neon">
+        命理详解
+      </h2>
+      
+      {/* Tab 切换 */}
+      <div className="flex gap-2 mb-6">
+        {tabs.map(tab => (
+          <button
+            key={tab.key}
+            onClick={() => setActiveTab(tab.key)}
+            className={`px-6 py-2 rounded-full text-sm font-medium transition-all ${
+              activeTab === tab.key 
+                ? 'bg-gradient-to-r from-purple-600 to-cyan-500 text-white shadow-lg shadow-purple-500/30' 
+                : 'bg-gray-800/50 text-gray-400 hover:text-white border border-gray-700'
+            }`}
+          >
+            {tab.icon} {tab.label}
+          </button>
+        ))}
+      </div>
+
+      {/* 内容区域 */}
+      <div className="w-full max-w-2xl">
+        {activeTab === 'liuyao' && (
+          <div className="bg-gradient-to-br from-[#1a1a2e]/90 to-[#0a0a0f]/90 backdrop-blur-md rounded-2xl p-8 shadow-2xl border border-purple-500/20 relative">
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1/2 h-px bg-gradient-to-r from-transparent via-cyan-400 to-transparent"></div>
+            
+            <div className="text-center mb-8">
+              <h3 className="text-2xl font-bold gradient-text-fire mb-2">{fortuneResult.title}</h3>
+              <span className="inline-block px-4 py-1 bg-gradient-to-r from-purple-600/80 to-cyan-500/80 rounded-full text-white text-sm">
+                {fortuneResult.fortuneLevel}
+              </span>
+            </div>
+            
+            <div className="space-y-5">
+              <div className="p-4 bg-[#0a0a0f]/50 rounded-lg border border-purple-500/20 hover:border-purple-500/40 transition-colors">
+                <h4 className="text-purple-400 font-medium mb-2 flex items-center gap-2">
+                  <span>💼</span> 事业运
+                </h4>
+                <p className="text-gray-300/80">{fortuneResult.details.career}</p>
+              </div>
+              <div className="p-4 bg-[#0a0a0f]/50 rounded-lg border border-pink-500/20 hover:border-pink-500/40 transition-colors">
+                <h4 className="text-pink-400 font-medium mb-2 flex items-center gap-2">
+                  <span>💕</span> 感情运
+                </h4>
+                <p className="text-gray-300/80">{fortuneResult.details.love}</p>
+              </div>
+              <div className="p-4 bg-[#0a0a0f]/50 rounded-lg border border-yellow-500/20 hover:border-yellow-500/40 transition-colors">
+                <h4 className="text-yellow-400 font-medium mb-2 flex items-center gap-2">
+                  <span>💰</span> 财运
+                </h4>
+                <p className="text-gray-300/80">{fortuneResult.details.wealth}</p>
+              </div>
+              <div className="p-4 bg-[#0a0a0f]/50 rounded-lg border border-cyan-500/20 hover:border-cyan-500/40 transition-colors">
+                <h4 className="text-cyan-400 font-medium mb-2 flex items-center gap-2">
+                  <span>🏥</span> 健康运
+                </h4>
+                <p className="text-gray-300/80">{fortuneResult.details.health}</p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'tarot' && fortuneResult.tarot && (
+          <div className="bg-gradient-to-br from-[#1a1a2e]/90 to-[#0a0a0f]/90 backdrop-blur-md rounded-2xl p-8 shadow-2xl border border-pink-500/20 relative">
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1/2 h-px bg-gradient-to-r from-transparent via-pink-400 to-transparent"></div>
+            
+            <div className="text-center mb-6">
+              <span className="inline-block px-4 py-1 bg-gradient-to-r from-pink-600/80 to-purple-500/80 rounded-full text-white text-sm">
+                {fortuneResult.tarot.level}
+              </span>
+            </div>
+
+            {/* 三张牌 */}
+            <div className="grid grid-cols-3 gap-4 mb-6">
+              {fortuneResult.tarot.cards.map((card, index) => (
+                <div key={index} className="text-center">
+                  <div className={`text-5xl mb-2 ${card.isReversed ? 'rotate-180' : ''}`}>
+                    {card.symbol}
+                  </div>
+                  <h4 className="text-sm font-medium text-white mb-1">
+                    {card.name}
+                    {card.isReversed && <span className="text-pink-400 text-xs ml-1">逆位</span>}
+                  </h4>
+                  <p className="text-xs text-gray-500">{card.position}</p>
+                </div>
+              ))}
+            </div>
+
+            {/* 牌义解读 */}
+            <div className="space-y-4">
+              {fortuneResult.tarot.cards.map((card, index) => (
+                <div key={index} className="p-4 bg-[#0a0a0f]/50 rounded-lg border border-pink-500/20">
+                  <h4 className="text-pink-400 font-medium mb-2">
+                    {card.position} · {card.name}{card.isReversed ? '（逆位）' : ''}
+                  </h4>
+                  <p className="text-gray-300/80 text-sm">{card.meaning}</p>
+                </div>
+              ))}
+            </div>
+
+            {/* 综合解读 */}
+            <div className="mt-6 p-4 bg-gradient-to-r from-purple-900/30 to-pink-900/30 rounded-lg border border-purple-500/30">
+              <h4 className="text-purple-300 font-medium mb-2">🔮 综合解读</h4>
+              <p className="text-gray-300/80 text-sm">{fortuneResult.tarot.overview}</p>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
 
 // 用户信息弹窗组件
 function UserInfoModal({ isOpen, onClose, onSubmit, initialData }) {
@@ -217,20 +356,21 @@ function App() {
   const generateFortuneResult = () => {
     if (!userInfo) return null
     
-    const result = getTodayFortune(
+    const liuyaoResult = getTodayFortune(
+      userInfo.birthDate,
+      userInfo.birthHour,
+      userInfo.gender
+    )
+    
+    const tarotResult = getTarotReading(
       userInfo.birthDate,
       userInfo.birthHour,
       userInfo.gender
     )
     
     return {
-      title: result.title,
-      fortuneLevel: result.level,
-      overview: result.overview,
-      outfit: result.outfit,
-      sleep: result.sleep,
-      details: result.details,
-      guaInfo: result.guaInfo
+      ...liuyaoResult,
+      tarot: tarotResult
     }
   }
 
@@ -257,13 +397,25 @@ function App() {
     localStorage.setItem('fortune_userInfo', JSON.stringify(data))
     setShowModal(false)
     
-    // 开始抽签
-    const result = getTodayFortune(
+    // 开始抽签 - 同时获取六爻和塔罗
+    const liuyaoResult = getTodayFortune(
       data.birthDate,
       data.birthHour,
       data.gender
     )
-    result.userInfo = data
+    
+    const tarotResult = getTarotReading(
+      data.birthDate,
+      data.birthHour,
+      data.gender
+    )
+    
+    const result = {
+      ...liuyaoResult,
+      tarot: tarotResult,
+      userInfo: data
+    }
+    
     setFortuneResult(result)
     localStorage.setItem('fortune_result', JSON.stringify(result))
     localStorage.setItem('fortune_resultDate', new Date().toDateString())
@@ -313,63 +465,7 @@ function App() {
         )
       
       case 'fortune':
-        return (
-          <div className="flex flex-col items-center justify-center min-h-[80vh] px-4 py-8 relative scanline">
-            <h2 className="text-4xl font-bold mb-8 gradient-text-neon">
-              命理详解
-            </h2>
-            {fortuneResult ? (
-              <div className="w-full max-w-2xl bg-gradient-to-br from-[#1a1a2e]/90 to-[#0a0a0f]/90 backdrop-blur-md rounded-2xl p-8 shadow-2xl border border-purple-500/20 relative">
-                {/* 顶部装饰 */}
-                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1/2 h-px bg-gradient-to-r from-transparent via-cyan-400 to-transparent"></div>
-                
-                <div className="text-center mb-8">
-                  <h3 className="text-2xl font-bold gradient-text-fire mb-2">{fortuneResult.title}</h3>
-                  <span className="inline-block px-4 py-1 bg-gradient-to-r from-purple-600/80 to-cyan-500/80 rounded-full text-white text-sm">
-                    {fortuneResult.fortuneLevel}
-                  </span>
-                </div>
-                
-                <div className="space-y-5">
-                  <div className="p-4 bg-[#0a0a0f]/50 rounded-lg border border-purple-500/20 hover:border-purple-500/40 transition-colors">
-                    <h4 className="text-purple-400 font-medium mb-2 flex items-center gap-2">
-                      <span>💼</span> 事业运
-                    </h4>
-                    <p className="text-gray-300/80">{fortuneResult.details.career}</p>
-                  </div>
-                  <div className="p-4 bg-[#0a0a0f]/50 rounded-lg border border-pink-500/20 hover:border-pink-500/40 transition-colors">
-                    <h4 className="text-pink-400 font-medium mb-2 flex items-center gap-2">
-                      <span>💕</span> 感情运
-                    </h4>
-                    <p className="text-gray-300/80">{fortuneResult.details.love}</p>
-                  </div>
-                  <div className="p-4 bg-[#0a0a0f]/50 rounded-lg border border-yellow-500/20 hover:border-yellow-500/40 transition-colors">
-                    <h4 className="text-yellow-400 font-medium mb-2 flex items-center gap-2">
-                      <span>💰</span> 财运
-                    </h4>
-                    <p className="text-gray-300/80">{fortuneResult.details.wealth}</p>
-                  </div>
-                  <div className="p-4 bg-[#0a0a0f]/50 rounded-lg border border-cyan-500/20 hover:border-cyan-500/40 transition-colors">
-                    <h4 className="text-cyan-400 font-medium mb-2 flex items-center gap-2">
-                      <span>🏥</span> 健康运
-                    </h4>
-                    <p className="text-gray-300/80">{fortuneResult.details.health}</p>
-                  </div>
-                </div>
-              </div>
-            ) : (
-              <div className="text-center text-gray-400">
-                <p>您还没有抽签，请先返回首页进行抽签</p>
-                <button 
-                  onClick={() => setCurrentPage('home')}
-                  className="mt-4 px-6 py-2 bg-gradient-to-r from-purple-600 to-cyan-500 text-white rounded-lg hover:shadow-[0_0_20px_rgba(196,76,255,0.4)] transition-all"
-                >
-                  去抽签
-                </button>
-              </div>
-            )}
-          </div>
-        )
+        return <FortuneDetail fortuneResult={fortuneResult} setCurrentPage={setCurrentPage} />
       
       case 'contact':
         return (
