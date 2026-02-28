@@ -127,7 +127,7 @@ function UserInfoModal({ isOpen, onClose, onSubmit, initialData }) {
 // 抽签结果总览组件
 function FortuneOverview({ result, onDrawAgain }) {
   return (
-    <div className="flex flex-col items-center justify-center min-h-[80vh] px-4 py-8">
+    <div className="flex flex-col items-center px-4 py-8 pb-16">
       <div className="w-full max-w-2xl bg-gray-800/50 backdrop-blur-sm rounded-2xl p-8 shadow-2xl border border-gray-700 mb-6">
         <h3 className="text-sm text-gray-400 text-center mb-4">今日签运</h3>
         <h2 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 via-orange-400 to-red-400 text-center mb-6">
@@ -209,8 +209,8 @@ function App() {
         title: '上上签',
         fortuneLevel: '大吉大利',
         overview: '命格清贵，贵人相助。事业方面将有重大突破，贵人运极佳，有望得到上司赏识或遇到重要合作伙伴。感情运势平稳向上，单身者有望邂逅良缘，已婚者家庭和睦。财运亨通，可适当投资理财。健康方面注意劳逸结合，保持良好作息。此签暗示您正处人生上升期，把握机遇，勇往直前。',
-        outfit: '今日宜穿红色系或暖色调服饰，增强气场与贵人运，适合佩戴金属饰品。',
-        sleep: '建议23点前入睡，保证充足睡眠，有助于运势提升。',
+        outfit: '今日宜穿红色系或暖色调服饰，搭配金色配饰，增强气场与贵人运，建议选择明亮色彩提升整体运势。',
+        sleep: '建议23点前入睡，保持卧室通风，有助于运势提升。',
         details: {
           career: '事业运势极佳，贵人相助，有望升职加薪或遇到重要合作机会。',
           love: '感情运势平稳，单身者有望遇到心仪对象，已婚者家庭幸福美满。',
@@ -222,8 +222,8 @@ function App() {
         title: '上签',
         fortuneLevel: '吉星高照',
         overview: '运势向好，稳中有进。事业方面进展顺利，虽然可能遇到一些小挑战，但都能迎刃而解。感情方面需要多一些耐心和包容，真诚待人会有意外收获。财运平稳，不宜冒进，宜稳健理财。健康方面注意饮食均衡，适量运动。此签提示您保持积极心态，稳扎稳打必有收获。',
-        outfit: '今日宜穿蓝色或绿色系服饰，稳重而不失活力，避免过于鲜艳。',
-        sleep: '建议23:30前入睡，保持睡眠质量，有助于明日精力充沛。',
+        outfit: '今日宜穿蓝色或绿色系服饰，稳重而不失活力，避免过于鲜艳的颜色，搭配简约风格更显气质。',
+        sleep: '建议23:30前入睡，睡前避免剧烈运动，有助于明日精力充沛。',
         details: {
           career: '事业稳步发展，可能有小挑战但能顺利解决。',
           love: '感情需要耐心经营，真诚待人会有好结果。',
@@ -235,8 +235,8 @@ function App() {
         title: '中签',
         fortuneLevel: '平稳顺利',
         overview: '运势平稳，不急不躁。事业方面保持现状即可，不宜有大的变动，静待时机成熟。感情方面可能有些许波折，需要多沟通理解，用心经营。财运一般，不宜投机，宜守不宜攻。健康方面注意情绪调节，保持心情愉悦。此签暗示您当前宜静不宜动，韬光养晦，蓄势待发。',
-        outfit: '今日宜穿素色或浅色系服饰，低调内敛，避免张扬。',
-        sleep: '建议22:30前入睡，调整作息，有助于稳定情绪。',
+        outfit: '今日宜穿素色或浅色系服饰，低调内敛为佳，避免过于张扬的颜色，简约搭配更显沉稳。',
+        sleep: '建议22:30前入睡，保持心情平静，有助于稳定情绪。',
         details: {
           career: '事业平稳，不宜有大的变动，静待时机。',
           love: '感情有些波折，需要多沟通和包容。',
