@@ -63,7 +63,7 @@ function FortuneDetail({ fortuneResult, setCurrentPage }) {
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1/2 h-px bg-gradient-to-r from-transparent via-pink-400 to-transparent"></div>
           
           <h3 className="text-xl font-bold text-pink-400 mb-4 flex items-center gap-2">
-            <span>🃏</span> 塔罗牌
+            <span>🔮</span> 塔罗牌
             {fortuneResult.tarot && (
               <span className="text-sm font-normal text-gray-500 ml-2">{fortuneResult.tarot.level}</span>
             )}
@@ -99,7 +99,7 @@ function FortuneDetail({ fortuneResult, setCurrentPage }) {
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1/2 h-px bg-gradient-to-r from-transparent via-blue-400 to-transparent"></div>
           
           <h3 className="text-xl font-bold text-blue-400 mb-4 flex items-center gap-2">
-            <span>⭐</span> 占星术
+            <span>✨</span> 占星术
             {fortuneResult.astrology && (
               <span className="text-sm font-normal text-gray-500 ml-2">{fortuneResult.astrology.level}</span>
             )}
@@ -201,6 +201,47 @@ function FortuneDetail({ fortuneResult, setCurrentPage }) {
       </div>
     </div>
   )
+}
+
+// 生成四大占卜术综合结果
+function generateCombinedOverview(result) {
+  if (!result) return ''
+  
+  const parts = []
+  
+  // 六爻
+  if (result.title) {
+    parts.push(`六爻得${result.title}`)
+  }
+  
+  // 塔罗
+  if (result.tarot && result.tarot.cards) {
+    const cardNames = result.tarot.cards.map(c => c.name).join('、')
+    parts.push(`塔罗抽中${cardNames}`)
+  }
+  
+  // 占星
+  if (result.astrology) {
+    parts.push(`星象${result.astrology.level}`)
+  }
+  
+  // 地占
+  if (result.geomancy) {
+    parts.push(`地占${result.geomancy.mainFigure?.name || ''}卦`)
+  }
+  
+  // 综合判断运势
+  const level = result.fortuneLevel || '平稳顺利'
+  
+  let overview = parts.join('，') + '。'
+  overview += `综合四术推演，今日运势${level}。`
+  
+  // 截断到100字
+  if (overview.length > 100) {
+    overview = overview.substring(0, 97) + '...'
+  }
+  
+  return overview
 }
 
 // 用户信息弹窗组件
@@ -350,7 +391,7 @@ function FortuneOverview({ result, onDrawAgain }) {
           </span>
         </div>
         <p className="text-gray-300/90 text-lg leading-relaxed text-center mb-8">
-          {result.overview}
+          {generateCombinedOverview(result)}
         </p>
         <div className="flex justify-center">
           <button 
