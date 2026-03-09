@@ -1,0 +1,41 @@
+export default defineAppConfig({
+  pages: [
+    'pages/index/index',
+    'pages/fortune/fortune',
+    'pages/profile/profile',
+    'pages/contact/contact',
+  ],
+  window: {
+    backgroundTextStyle: 'dark',
+    backgroundColor: '#0a0a1a',
+    navigationBarBackgroundColor: '#1a0a2e',
+    navigationBarTitleText: 'AI算命',
+    navigationBarTextStyle: 'white',
+  },
+  tabBar: {
+    color: '#666',
+    selectedColor: '#00f5ff',
+    backgroundColor: '#1a0a2e',
+    borderStyle: 'black',
+    list: [
+      {
+        pagePath: 'pages/index/index',
+        text: '首页',
+        iconPath: 'assets/home.png',
+        selectedIconPath: 'assets/home-active.png',
+      },
+      {
+        pagePath: 'pages/fortune/fortune',
+        text: '运势',
+        iconPath: 'assets/fortune.png',
+        selectedIconPath: 'assets/fortune-active.png',
+      },
+      {
+        pagePath: 'pages/profile/profile',
+        text: '我的',
+        iconPath: 'assets/profile.png',
+        selectedIconPath: 'assets/profile-active.png',
+      },
+    ],
+  },
+});
