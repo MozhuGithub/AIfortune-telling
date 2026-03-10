@@ -32,8 +32,8 @@ export default function Index() {
 
   const handleDrawFortune = () => {
     if (!userInfo) {
-      // 跳转到填写信息页面
-      Taro.navigateTo({ url: '/pages/profile/profile?mode=edit' });
+      // 跳转到填写信息页面（tabBar页面用switchTab）
+      Taro.switchTab({ url: '/pages/profile/profile' });
       return;
     }
     
@@ -88,7 +88,7 @@ export default function Index() {
             <Text className='fortune-level'>{fortuneResult.level}</Text>
             <Text className='fortune-summary'>{fortuneResult.summary}</Text>
           </View>
-          <Button className='detail-btn' onClick={() => Taro.navigateTo({ url: '/pages/fortune/fortune' })}>
+          <Button className='detail-btn' onClick={() => Taro.switchTab({ url: '/pages/fortune/fortune' })}>
             查看详情
           </Button>
         </View>
